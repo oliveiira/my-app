@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-import BarberLogo from '../../assets/barber.svg';
+import BarberLogo from '../../../assets/barber.svg';
 
 export default () => {
     const navigation = useNavigation();
