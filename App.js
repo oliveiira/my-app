@@ -1,21 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { enableScreens } from 'react-native-screens';
+import { createNativeStackNavigator } from 'react-native-screens/native-stack';
+
+import Preload from './screens/Preload';
+import SignIn from './screens/SignIn';
+import SignUp from './screens/SignUp';
+import {NavigationContainer} from "@react-navigation/native";
+
+enableScreens();
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{
+          initialRouteName: "Preload",
+          headerShown: false
+        }}>
+          <Stack.Screen name="Preload" component={Preload}/>
+          <Stack.Screen name="SignIn" component={SignIn}/>
+          <Stack.Screen name="SignUp" component={SignUp}/>
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
