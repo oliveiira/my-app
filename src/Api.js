@@ -10,7 +10,7 @@ export default {
             },
             body: JSON.stringify({token})
         });
-
+        //teste
         const json = await req.json();
 
         return json;
