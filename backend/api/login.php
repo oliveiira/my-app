@@ -43,7 +43,7 @@ if($email_exists && password_verify($data->password, password_hash($user->passwo
 
     $jwt = JWT::encode($token, $key);
 
-    echo json_encode(array('message' => 'Successful login.', 'jwt' => $jwt));
+    echo json_encode(array('message' => 'Successful login.', 'token' => $jwt, 'avatar' => $user->avatar));
 } else {
     http_response_code(401);
 

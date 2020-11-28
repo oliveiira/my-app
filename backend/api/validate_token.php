@@ -23,7 +23,7 @@ if($jwt) {
 
         http_response_code(200);
 
-        echo json_encode(array('message' => 'Access granted.', 'data' => $decoded->data));
+        echo json_encode(array('message' => 'Access granted.', 'token' => $decoded->data));
     } catch(Exception $e) {
         http_response_code(401);
 

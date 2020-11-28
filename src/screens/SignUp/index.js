@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { UserContext } from "../../contexts/UserContext";
 import {
     Container,
     InputArea,
@@ -10,6 +13,8 @@ import {
     SignMsgButtonTextBold
 } from './styles';
 
+import Api from '../../Api';
+
 import SignInput from "../../components/SignInput";
 
 import BarberLogo from '../../../assets/barber.svg';
@@ -18,14 +23,39 @@ import EmailIcon from '../../../assets/email.svg';
 import LockIcon from '../../../assets/lock.svg';
 
 export default () => {
+    const { dispatch: userDispatch } = useContext(UserContext);
     const navigation = useNavigation();
 
-    const [nameField, setNameField] = useState('');
+    const [firstNameField, setFirstNameField] = useState('');
+    const [lastNameField, setLastNameField] = useState('');
     const [emailField, setEmailField] = useState('');
     const [passwordField, setPasswordField] = useState('');
 
-    const handleSignClick = () => {
+    const handleSignClick = async () => {
+        if(firstNameField !== '' && lastNameField !== '' && emailField !== '' && passwordField !== '') {
+            let res = await Api.signUp(firstNameField, lastNameField, emailField, passwordField);
 
+            if(res.token) {
+                await AsyncStorage.setItem('token', res.token);
+
+                userDispatch({
+                    type: 'setAvatar',
+                    payload: {
+                        avatar: res.avatar
+                    }
+                });
+
+                navigation.reset({
+                    routes: [{
+                        name: 'Home'
+                    }]
+                });
+            } else {
+                alert('Não deu certo!');
+            }
+        } else {
+            alert('Preencha todos os campos!')
+        }
     }
 
     const handleSignMsgButtonClick = () => {
@@ -42,8 +72,14 @@ export default () => {
                 <SignInput
                     IconSvg={PersonIcon}
                     placeholder="Digite seu nome"
-                    value={nameField}
-                    onChangeText={text => setNameField(text)}
+                    value={firstNameField}
+                    onChangeText={text => setFirstNameField(text)}
+                />
+                <SignInput
+                    IconSvg={PersonIcon}
+                    placeholder="Digite seu sobrenome"
+                    value={lastNameField}
+                    onChangeText={text => setLastNameField(text)}
                 />
                 <SignInput
                     IconSvg={EmailIcon}

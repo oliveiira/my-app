@@ -1,4 +1,4 @@
-const BASE_API = 'https://172.19.112.1/backend/api';
+const BASE_API = 'http://192.168.100.26/myapp/frontend/backend/api';
 
 export default {
     checkToken:async (token) => {
@@ -29,7 +29,20 @@ export default {
 
         return json;
     },
-    signUp:async () => {
+    signUp:async (firstname, lastname, email, password) => {
+        const avatar = 'https://ui-avatars.com/api/?name=' + firstname + '+' + lastname;
 
+        const req = await fetch(`${BASE_API}/user/create.php`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({firstname, lastname, email, password, avatar})
+        });
+
+        const json = await req.json();
+
+        return json;
     }
 };

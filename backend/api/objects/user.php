@@ -122,7 +122,7 @@ class User {
     }
 
     function emailExists() {
-        $query = 'SELECT id, firstname, lastname, password FROM '.$this->table.' WHERE email = ? LIMIT 0, 1';
+        $query = 'SELECT id, firstname, lastname, password, avatar FROM '.$this->table.' WHERE email = ? LIMIT 0, 1';
 
         $stmt = $this->conn->prepare($query);
 
@@ -141,6 +141,7 @@ class User {
             $this->firstname = $row['firstname'];
             $this->lastname = $row['lastname'];
             $this->password = $row['password'];
+            $this->avatar = $row['avatar'];
 
             return true;
         }

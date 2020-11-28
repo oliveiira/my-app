@@ -16,6 +16,13 @@ $user = new User($db);
 
 $data = json_decode(file_get_contents('php://input'));
 
+include_once '../config/core.php';
+include_once '../../vendor/firebase/php-jwt/src/BeforeValidException.php';
+include_once '../../vendor/firebase/php-jwt/src/ExpiredException.php';
+include_once '../../vendor/firebase/php-jwt/src/SignatureInvalidException.php';
+include_once '../../vendor/firebase/php-jwt/src/JWT.php';
+use \Firebase\JWT\JWT;
+
 if(!empty($data->firstname) && !empty($data->lastname) && !empty($data->email) && !empty($data->password) && !empty($data->avatar)) {
     $user->firstname = $data->firstname;
     $user->lastname = $data->lastname;
@@ -23,10 +30,24 @@ if(!empty($data->firstname) && !empty($data->lastname) && !empty($data->email) &
     $user->password = $data->password;
     $user->avatar = $data->avatar;
 
+    $token = array(
+        'iat' => $issued_at,
+        'exp' => $expiration_time,
+        'iss' => $issuer,
+        'data' => array(
+            'id' => $user->id,
+            'firstname' => $user->firstname,
+            'lastname' => $user->lastname,
+            'email' => $user->email
+        )
+    );
+
     if($user->create()) {
         http_response_code(201);
 
-        echo json_encode(array('message' => 'User was created.'));
+        $jwt = JWT::encode($token, $key);
+
+        echo json_encode(array('message' => 'User was created.', 'token' => $jwt, 'avatar' => $user->avatar));
     } else {
         http_response_code(503);
 
